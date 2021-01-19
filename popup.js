@@ -4,6 +4,11 @@ let deExtensionize = document.getElementById('deExtensionize');
 let showStats = document.getElementById('showStats');
 let console = chrome.extension.getBackgroundPage().console;
 let sortFunc = (a, b) => {
+    if (!a.url && b.url) {
+        return -1;
+    } else if (a.url && !b.url) {
+        return 1;
+    }
     return a.title.toLowerCase() < b.title.toLowerCase() ? -1 : (a.title.toLowerCase() == b.title.toLowerCase() ? 0 : 1);
 };
 
@@ -95,6 +100,6 @@ showStats.onclick = function() {
     bookmarkStats.links = 0;
     chrome.bookmarks.getTree((results) => {
         DFS(results[0]);
+        document.getElementById("stats").innerText = "folder: " + bookmarkStats.folder + "\nlinks: " + bookmarkStats.links;
     });
-    console.log(bookmarkStats);
 }
